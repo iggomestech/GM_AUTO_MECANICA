@@ -129,6 +129,14 @@ git tag -a v0.1.1 -m "Release v0.1.1"
 git push origin v0.1.1
 ```
 
+Ou use scripts para versionamento automatico (cria commit + tag + push):
+
+```bash
+npm run release:patch
+npm run release:minor
+npm run release:major
+```
+
 Ao enviar a tag `v*`, o GitHub Actions cria a release automaticamente com changelog gerado.
 O processo tambem compila e anexa o instalador Windows (`.exe`) e o arquivo `.blockmap` na release.
 
