@@ -130,6 +130,7 @@ git push origin v0.1.1
 ```
 
 Ao enviar a tag `v*`, o GitHub Actions cria a release automaticamente com changelog gerado.
+O processo tambem compila e anexa o instalador Windows (`.exe`) e o arquivo `.blockmap` na release.
 
 ## Protecao da branch main
 
