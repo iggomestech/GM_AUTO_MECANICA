@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard – GM Auto Mecânica{% endblock %}
+{% block content %}
+<h1 class="page-title">Dashboard</h1>
+
+<div class="cards-grid">
+  <div class="card card-blue">
+    <div class="card-icon">👥</div>
+    <div class="card-info">
+      <span class="card-number">{{ total_clientes }}</span>
+      <span class="card-label">Clientes</span>
+    </div>
+    <a class="card-link" href="{{ url_for('clientes.listar') }}">Ver todos →</a>
+  </div>
+
+  <div class="card card-green">
+    <div class="card-icon">🚗</div>
+    <div class="card-info">
+      <span class="card-number">{{ total_veiculos }}</span>
+      <span class="card-label">Veículos</span>
+    </div>
+    <a class="card-link" href="{{ url_for('veiculos.listar') }}">Ver todos →</a>
+  </div>
+
+  <div class="card card-orange">
+    <div class="card-icon">📋</div>
+    <div class="card-info">
+      <span class="card-number">{{ ordens_abertas }}</span>
+      <span class="card-label">Ordens em Aberto</span>
+    </div>
+    <a class="card-link" href="{{ url_for('ordens.listar') }}">Ver todas →</a>
+  </div>
+
+  <div class="card card-red">
+    <div class="card-icon">⚠️</div>
+    <div class="card-info">
+      <span class="card-number">{{ pecas_baixo_estoque }}</span>
+      <span class="card-label">Peças com Baixo Estoque</span>
+    </div>
+    <a class="card-link" href="{{ url_for('pecas.listar') }}">Ver estoque →</a>
+  </div>
+</div>
+
+<section class="section">
+  <div class="section-header">
+    <h2>Últimas Ordens de Serviço</h2>
+    <a href="{{ url_for('ordens.nova') }}" class="btn btn-primary">+ Nova OS</a>
+  </div>
+  {% if ordens_recentes %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Número</th>
+        <th>Cliente</th>
+        <th>Veículo</th>
+        <th>Status</th>
+        <th>Total</th>
+        <th>Data</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for o in ordens_recentes %}
+      <tr>
+        <td><strong>{{ o.numero }}</strong></td>
+        <td>{{ o.cliente.nome }}</td>
+        <td>{{ o.veiculo.placa }} – {{ o.veiculo.modelo }}</td>
+        <td><span class="badge badge-{{ o.status | lower | replace(' ', '-') | replace('ç', 'c') | replace('ã', 'a') }}">{{ o.status }}</span></td>
+        <td>R$ {{ "%.2f"|format(o.valor_total|float) }}</td>
+        <td>{{ o.criado_em.strftime('%d/%m/%Y') }}</td>
+        <td><a href="{{ url_for('ordens.detalhar', id=o.id) }}" class="btn btn-sm">Ver</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-msg">Nenhuma ordem de serviço cadastrada ainda.</p>
+  {% endif %}
+</section>
+{% endblock %}

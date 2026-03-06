@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}Ordens de Serviço – GM Auto Mecânica{% endblock %}
+{% block content %}
+<div class="section-header">
+  <h1 class="page-title">Ordens de Serviço</h1>
+  <a href="{{ url_for('ordens.nova') }}" class="btn btn-primary">+ Nova OS</a>
+</div>
+
+<form class="search-form" method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="Buscar por número..." class="input-search">
+  <select name="status" class="input" style="max-width:200px">
+    <option value="">Todos os status</option>
+    {% for s in statuses %}
+    <option value="{{ s }}" {% if status_sel == s %}selected{% endif %}>{{ s }}</option>
+    {% endfor %}
+  </select>
+  <button type="submit" class="btn">Filtrar</button>
+  {% if q or status_sel %}<a href="{{ url_for('ordens.listar') }}" class="btn btn-secondary">Limpar</a>{% endif %}
+</form>
+
+{% if ordens %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Número</th>
+      <th>Cliente</th>
+      <th>Veículo</th>
+      <th>Status</th>
+      <th>Serviço (R$)</th>
+      <th>Peças (R$)</th>
+      <th>Total (R$)</th>
+      <th>Data</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for o in ordens %}
+    <tr>
+      <td><a href="{{ url_for('ordens.detalhar', id=o.id) }}"><strong>{{ o.numero }}</strong></a></td>
+      <td>{{ o.cliente.nome }}</td>
+      <td>{{ o.veiculo.placa }}</td>
+      <td><span class="badge">{{ o.status }}</span></td>
+      <td>{{ "%.2f"|format(o.valor_servico|float) }}</td>
+      <td>{{ "%.2f"|format(o.valor_pecas|float) }}</td>
+      <td><strong>{{ "%.2f"|format(o.valor_total|float) }}</strong></td>
+      <td>{{ o.criado_em.strftime('%d/%m/%Y') }}</td>
+      <td class="actions">
+        <a href="{{ url_for('ordens.detalhar', id=o.id) }}" class="btn btn-sm">Ver</a>
+        <a href="{{ url_for('ordens.editar', id=o.id) }}" class="btn btn-sm">Editar</a>
+        <form method="post" action="{{ url_for('ordens.excluir', id=o.id) }}" class="inline-form"
+              onsubmit="return confirm('Excluir OS {{ o.numero }}?')">
+          <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty-msg">Nenhuma ordem de serviço encontrada.</p>
+{% endif %}
+{% endblock %}

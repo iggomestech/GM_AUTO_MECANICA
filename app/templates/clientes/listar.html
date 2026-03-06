@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% block title %}Clientes – GM Auto Mecânica{% endblock %}
+{% block content %}
+<div class="section-header">
+  <h1 class="page-title">Clientes</h1>
+  <a href="{{ url_for('clientes.novo') }}" class="btn btn-primary">+ Novo Cliente</a>
+</div>
+
+<form class="search-form" method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="Buscar por nome ou CPF/CNPJ..." class="input-search">
+  <button type="submit" class="btn">Buscar</button>
+  {% if q %}<a href="{{ url_for('clientes.listar') }}" class="btn btn-secondary">Limpar</a>{% endif %}
+</form>
+
+{% if clientes %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>Nome</th>
+      <th>CPF/CNPJ</th>
+      <th>Telefone</th>
+      <th>Veículos</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for c in clientes %}
+    <tr>
+      <td>{{ c.id }}</td>
+      <td><a href="{{ url_for('clientes.detalhar', id=c.id) }}">{{ c.nome }}</a></td>
+      <td>{{ c.cpf_cnpj }}</td>
+      <td>{{ c.telefone }}</td>
+      <td>{{ c.veiculos | length }}</td>
+      <td class="actions">
+        <a href="{{ url_for('clientes.editar', id=c.id) }}" class="btn btn-sm">Editar</a>
+        <form method="post" action="{{ url_for('clientes.excluir', id=c.id) }}" class="inline-form"
+              onsubmit="return confirm('Excluir cliente {{ c.nome }}?')">
+          <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty-msg">Nenhum cliente encontrado.</p>
+{% endif %}
+{% endblock %}

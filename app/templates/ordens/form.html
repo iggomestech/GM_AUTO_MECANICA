@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% block title %}{% if ordem %}Editar OS {{ ordem.numero }}{% else %}Nova OS{% endif %} – GM Auto Mecânica{% endblock %}
+{% block content %}
+<h1 class="page-title">{% if ordem %}Editar OS {{ ordem.numero }}{% else %}Nova Ordem de Serviço{% endif %}</h1>
+
+<form method="post" class="form-card">
+  <div class="form-row">
+    <div class="form-group">
+      <label for="cliente_id">Cliente *</label>
+      <select id="cliente_id" name="cliente_id" class="input" required>
+        <option value="">Selecione...</option>
+        {% for c in clientes %}
+        <option value="{{ c.id }}" {% if ordem and ordem.cliente_id == c.id %}selected{% endif %}>
+          {{ c.nome }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="veiculo_id">Veículo *</label>
+      <select id="veiculo_id" name="veiculo_id" class="input" required>
+        <option value="">Selecione...</option>
+        {% for v in veiculos %}
+        <option value="{{ v.id }}" {% if ordem and ordem.veiculo_id == v.id %}selected{% endif %}>
+          {{ v.placa }} – {{ v.marca }} {{ v.modelo }}
+        </option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="descricao_problema">Descrição do Problema *</label>
+    <textarea id="descricao_problema" name="descricao_problema" class="input" rows="3" required>{{ ordem.descricao_problema if ordem else '' }}</textarea>
+  </div>
+  {% if ordem %}
+  <div class="form-group">
+    <label for="servicos_realizados">Serviços Realizados</label>
+    <textarea id="servicos_realizados" name="servicos_realizados" class="input" rows="3">{{ ordem.servicos_realizados or '' }}</textarea>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="status">Status *</label>
+      <select id="status" name="status" class="input" required>
+        {% set statuses = ['Aberta', 'Em Andamento', 'Aguardando Peça', 'Concluída', 'Cancelada'] %}
+        {% for s in statuses %}
+        <option value="{{ s }}" {% if ordem.status == s %}selected{% endif %}>{{ s }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="quilometragem">Quilometragem</label>
+      <input type="number" id="quilometragem" name="quilometragem" class="input" min="0"
+             value="{{ ordem.quilometragem or '' }}">
+    </div>
+    <div class="form-group">
+      <label for="valor_servico">Valor Serviço (R$)</label>
+      <input type="number" id="valor_servico" name="valor_servico" class="input"
+             step="0.01" min="0" value="{{ ordem.valor_servico or '0.00' }}">
+    </div>
+  </div>
+  {% else %}
+  <div class="form-row">
+    <div class="form-group">
+      <label for="quilometragem">Quilometragem</label>
+      <input type="number" id="quilometragem" name="quilometragem" class="input" min="0" value="">
+    </div>
+    <div class="form-group">
+      <label for="valor_servico">Valor Serviço (R$)</label>
+      <input type="number" id="valor_servico" name="valor_servico" class="input"
+             step="0.01" min="0" value="0.00">
+    </div>
+  </div>
+  {% endif %}
+  <div class="form-group">
+    <label for="observacoes">Observações</label>
+    <textarea id="observacoes" name="observacoes" class="input" rows="2">{{ ordem.observacoes or '' }}</textarea>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    {% if ordem %}
+    <a href="{{ url_for('ordens.detalhar', id=ordem.id) }}" class="btn btn-secondary">Cancelar</a>
+    {% else %}
+    <a href="{{ url_for('ordens.listar') }}" class="btn btn-secondary">Cancelar</a>
+    {% endif %}
+  </div>
+</form>
+{% endblock %}

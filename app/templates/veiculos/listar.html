@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Veículos – GM Auto Mecânica{% endblock %}
+{% block content %}
+<div class="section-header">
+  <h1 class="page-title">Veículos</h1>
+  <a href="{{ url_for('veiculos.novo') }}" class="btn btn-primary">+ Novo Veículo</a>
+</div>
+
+<form class="search-form" method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="Buscar por placa, marca ou modelo..." class="input-search">
+  <button type="submit" class="btn">Buscar</button>
+  {% if q %}<a href="{{ url_for('veiculos.listar') }}" class="btn btn-secondary">Limpar</a>{% endif %}
+</form>
+
+{% if veiculos %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Placa</th>
+      <th>Cliente</th>
+      <th>Marca</th>
+      <th>Modelo</th>
+      <th>Ano</th>
+      <th>Cor</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for v in veiculos %}
+    <tr>
+      <td><a href="{{ url_for('veiculos.detalhar', id=v.id) }}"><strong>{{ v.placa }}</strong></a></td>
+      <td><a href="{{ url_for('clientes.detalhar', id=v.cliente.id) }}">{{ v.cliente.nome }}</a></td>
+      <td>{{ v.marca }}</td>
+      <td>{{ v.modelo }}</td>
+      <td>{{ v.ano }}</td>
+      <td>{{ v.cor or '–' }}</td>
+      <td class="actions">
+        <a href="{{ url_for('veiculos.editar', id=v.id) }}" class="btn btn-sm">Editar</a>
+        <form method="post" action="{{ url_for('veiculos.excluir', id=v.id) }}" class="inline-form"
+              onsubmit="return confirm('Excluir veículo {{ v.placa }}?')">
+          <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty-msg">Nenhum veículo encontrado.</p>
+{% endif %}
+{% endblock %}

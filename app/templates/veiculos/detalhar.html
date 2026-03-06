@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}{{ veiculo.placa }} – GM Auto Mecânica{% endblock %}
+{% block content %}
+<div class="section-header">
+  <h1 class="page-title">{{ veiculo.placa }} – {{ veiculo.marca }} {{ veiculo.modelo }}</h1>
+  <a href="{{ url_for('veiculos.editar', id=veiculo.id) }}" class="btn btn-primary">Editar</a>
+</div>
+
+<div class="detail-card">
+  <dl class="detail-list">
+    <dt>Cliente</dt>
+    <dd><a href="{{ url_for('clientes.detalhar', id=veiculo.cliente.id) }}">{{ veiculo.cliente.nome }}</a></dd>
+    <dt>Marca</dt><dd>{{ veiculo.marca }}</dd>
+    <dt>Modelo</dt><dd>{{ veiculo.modelo }}</dd>
+    <dt>Ano</dt><dd>{{ veiculo.ano }}</dd>
+    <dt>Cor</dt><dd>{{ veiculo.cor or '–' }}</dd>
+    <dt>Chassi</dt><dd>{{ veiculo.chassi or '–' }}</dd>
+    <dt>Cadastrado em</dt><dd>{{ veiculo.criado_em.strftime('%d/%m/%Y %H:%M') }}</dd>
+  </dl>
+</div>
+
+<section class="section">
+  <h2>Histórico de Serviços</h2>
+  {% if veiculo.ordens %}
+  <table class="table">
+    <thead>
+      <tr><th>Número</th><th>Status</th><th>Problema</th><th>Total</th><th>Data</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for o in veiculo.ordens %}
+      <tr>
+        <td>{{ o.numero }}</td>
+        <td><span class="badge">{{ o.status }}</span></td>
+        <td>{{ o.descricao_problema[:60] }}{% if o.descricao_problema|length > 60 %}...{% endif %}</td>
+        <td>R$ {{ "%.2f"|format(o.valor_total|float) }}</td>
+        <td>{{ o.criado_em.strftime('%d/%m/%Y') }}</td>
+        <td><a href="{{ url_for('ordens.detalhar', id=o.id) }}" class="btn btn-sm">Ver</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-msg">Nenhum serviço registrado para este veículo.</p>
+  {% endif %}
+</section>
+
+<div class="form-actions">
+  <a href="{{ url_for('veiculos.listar') }}" class="btn btn-secondary">← Voltar</a>
+</div>
+{% endblock %}

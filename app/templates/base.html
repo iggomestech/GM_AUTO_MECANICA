@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}GM Auto Mecânica{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+  <nav class="navbar">
+    <a class="navbar-brand" href="{{ url_for('main.index') }}">🔧 GM Auto Mecânica</a>
+    <ul class="nav-links">
+      <li><a href="{{ url_for('main.index') }}" {% if request.endpoint == 'main.index' %}class="active"{% endif %}>Dashboard</a></li>
+      <li><a href="{{ url_for('clientes.listar') }}" {% if request.blueprint == 'clientes' %}class="active"{% endif %}>Clientes</a></li>
+      <li><a href="{{ url_for('veiculos.listar') }}" {% if request.blueprint == 'veiculos' %}class="active"{% endif %}>Veículos</a></li>
+      <li><a href="{{ url_for('ordens.listar') }}" {% if request.blueprint == 'ordens' %}class="active"{% endif %}>Ordens de Serviço</a></li>
+      <li><a href="{{ url_for('pecas.listar') }}" {% if request.blueprint == 'pecas' %}class="active"{% endif %}>Peças/Estoque</a></li>
+    </ul>
+  </nav>
+
+  <main class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="footer">
+    <p>&copy; {{ now.year }} GM Auto Mecânica &mdash; Sistema de Gestão</p>
+  </footer>
+</body>
+</html>

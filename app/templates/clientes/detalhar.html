@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+{% block title %}{{ cliente.nome }} – GM Auto Mecânica{% endblock %}
+{% block content %}
+<div class="section-header">
+  <h1 class="page-title">{{ cliente.nome }}</h1>
+  <a href="{{ url_for('clientes.editar', id=cliente.id) }}" class="btn btn-primary">Editar</a>
+</div>
+
+<div class="detail-card">
+  <dl class="detail-list">
+    <dt>CPF/CNPJ</dt><dd>{{ cliente.cpf_cnpj }}</dd>
+    <dt>Telefone</dt><dd>{{ cliente.telefone }}</dd>
+    <dt>E-mail</dt><dd>{{ cliente.email or '–' }}</dd>
+    <dt>Endereço</dt><dd>{{ cliente.endereco or '–' }}</dd>
+    <dt>Cadastrado em</dt><dd>{{ cliente.criado_em.strftime('%d/%m/%Y %H:%M') }}</dd>
+  </dl>
+</div>
+
+<section class="section">
+  <div class="section-header">
+    <h2>Veículos</h2>
+    <a href="{{ url_for('veiculos.novo') }}" class="btn btn-sm btn-primary">+ Novo Veículo</a>
+  </div>
+  {% if cliente.veiculos %}
+  <table class="table">
+    <thead>
+      <tr><th>Placa</th><th>Marca</th><th>Modelo</th><th>Ano</th><th>Cor</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for v in cliente.veiculos %}
+      <tr>
+        <td>{{ v.placa }}</td>
+        <td>{{ v.marca }}</td>
+        <td>{{ v.modelo }}</td>
+        <td>{{ v.ano }}</td>
+        <td>{{ v.cor or '–' }}</td>
+        <td><a href="{{ url_for('veiculos.detalhar', id=v.id) }}" class="btn btn-sm">Ver</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-msg">Nenhum veículo cadastrado para este cliente.</p>
+  {% endif %}
+</section>
+
+<section class="section">
+  <h2>Ordens de Serviço</h2>
+  {% if cliente.ordens %}
+  <table class="table">
+    <thead>
+      <tr><th>Número</th><th>Veículo</th><th>Status</th><th>Total</th><th>Data</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for o in cliente.ordens %}
+      <tr>
+        <td>{{ o.numero }}</td>
+        <td>{{ o.veiculo.placa }}</td>
+        <td><span class="badge">{{ o.status }}</span></td>
+        <td>R$ {{ "%.2f"|format(o.valor_total|float) }}</td>
+        <td>{{ o.criado_em.strftime('%d/%m/%Y') }}</td>
+        <td><a href="{{ url_for('ordens.detalhar', id=o.id) }}" class="btn btn-sm">Ver</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-msg">Nenhuma ordem de serviço para este cliente.</p>
+  {% endif %}
+</section>
+
+<div class="form-actions">
+  <a href="{{ url_for('clientes.listar') }}" class="btn btn-secondary">← Voltar</a>
+</div>
+{% endblock %}

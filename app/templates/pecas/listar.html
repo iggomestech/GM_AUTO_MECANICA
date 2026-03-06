@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}Peças/Estoque – GM Auto Mecânica{% endblock %}
+{% block content %}
+<div class="section-header">
+  <h1 class="page-title">Peças / Estoque</h1>
+  <a href="{{ url_for('pecas.nova') }}" class="btn btn-primary">+ Nova Peça</a>
+</div>
+
+<form class="search-form" method="get">
+  <input type="text" name="q" value="{{ q }}" placeholder="Buscar por código ou descrição..." class="input-search">
+  <button type="submit" class="btn">Buscar</button>
+  {% if q %}<a href="{{ url_for('pecas.listar') }}" class="btn btn-secondary">Limpar</a>{% endif %}
+</form>
+
+{% if pecas %}
+<table class="table">
+  <thead>
+    <tr>
+      <th>Código</th>
+      <th>Descrição</th>
+      <th>Qtd. Estoque</th>
+      <th>Est. Mínimo</th>
+      <th>Preço Custo</th>
+      <th>Preço Venda</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in pecas %}
+    <tr {% if p.quantidade <= p.estoque_minimo %}class="row-warning"{% endif %}>
+      <td>{{ p.codigo }}</td>
+      <td>{{ p.descricao }}</td>
+      <td>
+        {{ p.quantidade }}
+        {% if p.quantidade <= p.estoque_minimo %}
+        <span class="badge badge-danger">Baixo</span>
+        {% endif %}
+      </td>
+      <td>{{ p.estoque_minimo }}</td>
+      <td>R$ {{ "%.2f"|format(p.preco_custo|float) }}</td>
+      <td>R$ {{ "%.2f"|format(p.preco_venda|float) }}</td>
+      <td class="actions">
+        <a href="{{ url_for('pecas.editar', id=p.id) }}" class="btn btn-sm">Editar</a>
+        <form method="post" action="{{ url_for('pecas.excluir', id=p.id) }}" class="inline-form"
+              onsubmit="return confirm('Excluir peça {{ p.codigo }}?')">
+          <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+        </form>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% else %}
+<p class="empty-msg">Nenhuma peça encontrada.</p>
+{% endif %}
+{% endblock %}

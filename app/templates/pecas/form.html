@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block title %}{% if peca %}Editar Peça{% else %}Nova Peça{% endif %} – GM Auto Mecânica{% endblock %}
+{% block content %}
+<h1 class="page-title">{% if peca %}Editar Peça{% else %}Nova Peça{% endif %}</h1>
+
+<form method="post" class="form-card">
+  <div class="form-row">
+    <div class="form-group">
+      <label for="codigo">Código *</label>
+      <input type="text" id="codigo" name="codigo" class="input" required
+             value="{{ peca.codigo if peca else '' }}">
+    </div>
+    <div class="form-group" style="flex:3">
+      <label for="descricao">Descrição *</label>
+      <input type="text" id="descricao" name="descricao" class="input" required
+             value="{{ peca.descricao if peca else '' }}">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="quantidade">Qtd. Estoque *</label>
+      <input type="number" id="quantidade" name="quantidade" class="input" required min="0"
+             value="{{ peca.quantidade if peca else 0 }}">
+    </div>
+    <div class="form-group">
+      <label for="estoque_minimo">Estoque Mínimo</label>
+      <input type="number" id="estoque_minimo" name="estoque_minimo" class="input" min="0"
+             value="{{ peca.estoque_minimo if peca else 1 }}">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="preco_custo">Preço de Custo (R$) *</label>
+      <input type="number" id="preco_custo" name="preco_custo" class="input" required
+             step="0.01" min="0" value="{{ peca.preco_custo if peca else '0.00' }}">
+    </div>
+    <div class="form-group">
+      <label for="preco_venda">Preço de Venda (R$) *</label>
+      <input type="number" id="preco_venda" name="preco_venda" class="input" required
+             step="0.01" min="0" value="{{ peca.preco_venda if peca else '0.00' }}">
+    </div>
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{{ url_for('pecas.listar') }}" class="btn btn-secondary">Cancelar</a>
+  </div>
+</form>
+{% endblock %}

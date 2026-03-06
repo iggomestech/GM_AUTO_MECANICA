@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% block title %}{{ ordem.numero }} – GM Auto Mecânica{% endblock %}
+{% block content %}
+<div class="section-header">
+  <h1 class="page-title">Ordem de Serviço: {{ ordem.numero }}</h1>
+  <div>
+    <a href="{{ url_for('ordens.editar', id=ordem.id) }}" class="btn btn-primary">Editar</a>
+    <form method="post" action="{{ url_for('ordens.excluir', id=ordem.id) }}" class="inline-form"
+          onsubmit="return confirm('Excluir OS {{ ordem.numero }}?')">
+      <button type="submit" class="btn btn-danger">Excluir</button>
+    </form>
+  </div>
+</div>
+
+<div class="detail-grid">
+  <div class="detail-card">
+    <h3>Dados da OS</h3>
+    <dl class="detail-list">
+      <dt>Status</dt>
+      <dd><span class="badge">{{ ordem.status }}</span></dd>
+      <dt>Abertura</dt>
+      <dd>{{ ordem.criado_em.strftime('%d/%m/%Y %H:%M') }}</dd>
+      {% if ordem.concluido_em %}
+      <dt>Conclusão</dt>
+      <dd>{{ ordem.concluido_em.strftime('%d/%m/%Y %H:%M') }}</dd>
+      {% endif %}
+    </dl>
+  </div>
+  <div class="detail-card">
+    <h3>Cliente &amp; Veículo</h3>
+    <dl class="detail-list">
+      <dt>Cliente</dt>
+      <dd><a href="{{ url_for('clientes.detalhar', id=ordem.cliente.id) }}">{{ ordem.cliente.nome }}</a></dd>
+      <dt>Telefone</dt>
+      <dd>{{ ordem.cliente.telefone }}</dd>
+      <dt>Veículo</dt>
+      <dd>
+        <a href="{{ url_for('veiculos.detalhar', id=ordem.veiculo.id) }}">
+          {{ ordem.veiculo.placa }} – {{ ordem.veiculo.marca }} {{ ordem.veiculo.modelo }} ({{ ordem.veiculo.ano }})
+        </a>
+      </dd>
+      {% if ordem.quilometragem %}
+      <dt>KM</dt>
+      <dd>{{ "{:,}".format(ordem.quilometragem).replace(",", ".") }} km</dd>
+      {% endif %}
+    </dl>
+  </div>
+  <div class="detail-card">
+    <h3>Valores</h3>
+    <dl class="detail-list">
+      <dt>Serviços</dt>
+      <dd>R$ {{ "%.2f"|format(ordem.valor_servico|float) }}</dd>
+      <dt>Peças</dt>
+      <dd>R$ {{ "%.2f"|format(ordem.valor_pecas|float) }}</dd>
+      <dt>Total</dt>
+      <dd><strong>R$ {{ "%.2f"|format(ordem.valor_total|float) }}</strong></dd>
+    </dl>
+  </div>
+</div>
+
+<div class="detail-card" style="margin-top:1rem">
+  <h3>Descrição do Problema</h3>
+  <p>{{ ordem.descricao_problema }}</p>
+  {% if ordem.servicos_realizados %}
+  <h3>Serviços Realizados</h3>
+  <p>{{ ordem.servicos_realizados }}</p>
+  {% endif %}
+  {% if ordem.observacoes %}
+  <h3>Observações</h3>
+  <p>{{ ordem.observacoes }}</p>
+  {% endif %}
+</div>
+
+<section class="section">
+  <div class="section-header">
+    <h2>Peças Utilizadas</h2>
+  </div>
+  {% if ordem.itens %}
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Código</th>
+        <th>Descrição</th>
+        <th>Qtd</th>
+        <th>Preço Unit.</th>
+        <th>Subtotal</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in ordem.itens %}
+      <tr>
+        <td>{{ item.peca.codigo }}</td>
+        <td>{{ item.peca.descricao }}</td>
+        <td>{{ item.quantidade }}</td>
+        <td>R$ {{ "%.2f"|format(item.preco_unitario|float) }}</td>
+        <td>R$ {{ "%.2f"|format(item.subtotal|float) }}</td>
+        <td>
+          <form method="post"
+                action="{{ url_for('ordens.remover_peca', id=ordem.id, item_id=item.id) }}"
+                class="inline-form"
+                onsubmit="return confirm('Remover esta peça?')">
+            <button type="submit" class="btn btn-sm btn-danger">Remover</button>
+          </form>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <p class="empty-msg">Nenhuma peça adicionada.</p>
+  {% endif %}
+
+  {% if ordem.status not in ['Concluída', 'Cancelada'] %}
+  <form method="post" action="{{ url_for('ordens.adicionar_peca', id=ordem.id) }}" class="inline-form" style="margin-top:1rem;display:flex;gap:.5rem;align-items:flex-end;flex-wrap:wrap">
+    <div class="form-group" style="margin:0;min-width:250px">
+      <label>Peça</label>
+      <select name="peca_id" class="input" required>
+        <option value="">Selecione...</option>
+        {% for p in pecas %}
+        <option value="{{ p.id }}">{{ p.codigo }} – {{ p.descricao }} (Estoque: {{ p.quantidade }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="form-group" style="margin:0;width:80px">
+      <label>Qtd</label>
+      <input type="number" name="quantidade" class="input" value="1" min="1" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Adicionar Peça</button>
+  </form>
+  {% endif %}
+</section>
+
+<div class="form-actions">
+  <a href="{{ url_for('ordens.listar') }}" class="btn btn-secondary">← Voltar</a>
+</div>
+{% endblock %}

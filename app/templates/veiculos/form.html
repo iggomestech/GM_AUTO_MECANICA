@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}{% if veiculo %}Editar Veículo{% else %}Novo Veículo{% endif %} – GM Auto Mecânica{% endblock %}
+{% block content %}
+<h1 class="page-title">{% if veiculo %}Editar Veículo{% else %}Novo Veículo{% endif %}</h1>
+
+<form method="post" class="form-card">
+  <div class="form-group">
+    <label for="cliente_id">Cliente *</label>
+    <select id="cliente_id" name="cliente_id" class="input" required>
+      <option value="">Selecione...</option>
+      {% for c in clientes %}
+      <option value="{{ c.id }}" {% if veiculo and veiculo.cliente_id == c.id %}selected{% endif %}>
+        {{ c.nome }} – {{ c.cpf_cnpj }}
+      </option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="marca">Marca *</label>
+      <input type="text" id="marca" name="marca" class="input" required
+             value="{{ veiculo.marca if veiculo else '' }}">
+    </div>
+    <div class="form-group">
+      <label for="modelo">Modelo *</label>
+      <input type="text" id="modelo" name="modelo" class="input" required
+             value="{{ veiculo.modelo if veiculo else '' }}">
+    </div>
+  </div>
+  <div class="form-row">
+    <div class="form-group">
+      <label for="ano">Ano *</label>
+      <input type="number" id="ano" name="ano" class="input" required min="1950" max="2100"
+             value="{{ veiculo.ano if veiculo else '' }}">
+    </div>
+    <div class="form-group">
+      <label for="placa">Placa *</label>
+      <input type="text" id="placa" name="placa" class="input" required maxlength="10"
+             value="{{ veiculo.placa if veiculo else '' }}" style="text-transform:uppercase">
+    </div>
+    <div class="form-group">
+      <label for="cor">Cor</label>
+      <input type="text" id="cor" name="cor" class="input"
+             value="{{ veiculo.cor if veiculo else '' }}">
+    </div>
+  </div>
+  <div class="form-group">
+    <label for="chassi">Chassi</label>
+    <input type="text" id="chassi" name="chassi" class="input" maxlength="50"
+           value="{{ veiculo.chassi if veiculo else '' }}">
+  </div>
+  <div class="form-actions">
+    <button type="submit" class="btn btn-primary">Salvar</button>
+    <a href="{{ url_for('veiculos.listar') }}" class="btn btn-secondary">Cancelar</a>
+  </div>
+</form>
+{% endblock %}
