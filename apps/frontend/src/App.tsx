@@ -625,7 +625,7 @@ export function App() {
       <main className="layout">
         <header>
           <div className="brand-mark">
-            <img src="/branding/logo/logo.jpg" alt="Logo da empresa" className="brand-logo" />
+            <img src="branding/logo/logo.jpg" alt="Logo da empresa" className="brand-logo" />
           </div>
           <h1>GM Sistema - Oficina Mecanica</h1>
           <p>Clientes, veiculos e ordens de servico em um unico painel.</p>
@@ -633,7 +633,7 @@ export function App() {
 
         <section className="card login-shell">
           <div className="login-cover" aria-hidden="true">
-            <img src="/branding/login-capa.jpg" alt="" className="login-cover-image" />
+            <img src="branding/login-capa.jpg" alt="" className="login-cover-image" />
           </div>
           <div>
             <h2>Autenticacao</h2>
@@ -653,7 +653,7 @@ export function App() {
     <main className="app-shell">
       <aside className="sidebar">
         <div className="brand-mark sidebar-brand">
-          <img src="/branding/logo/logo.jpg" alt="Logo da empresa" className="brand-logo" />
+          <img src="branding/logo/logo.jpg" alt="Logo da empresa" className="brand-logo" />
         </div>
         <p className="sidebar-caption">Menu principal</p>
         <nav className="menu menu-vertical">
