@@ -117,3 +117,27 @@ Detalhes da rotina:
 - Destino dos backups: `backups/<timestamp>/`
 - Arquivos copiados: `dev.db`, `dev.db-wal`, `dev.db-shm` (se existirem)
 - Retencao automatica: 12 semanas
+
+## Releases e versionamento
+
+O repositorio possui workflow de release automatica por tag em `.github/workflows/release.yml`.
+
+Para publicar uma nova versao:
+
+```bash
+git tag -a v0.1.1 -m "Release v0.1.1"
+git push origin v0.1.1
+```
+
+Ao enviar a tag `v*`, o GitHub Actions cria a release automaticamente com changelog gerado.
+
+## Protecao da branch main
+
+Para proteger a branch `main` no GitHub:
+
+1. Acesse `Settings > Branches > Add rule`.
+2. Em `Branch name pattern`, informe `main`.
+3. Marque `Require a pull request before merging`.
+4. Marque `Require status checks to pass before merging` e selecione o check `build` (workflow CI).
+5. (Opcional) Marque `Require conversation resolution before merging`.
+6. Salve a regra.
