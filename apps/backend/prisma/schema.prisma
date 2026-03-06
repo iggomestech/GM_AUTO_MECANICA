@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  name      String
+  username  String   @unique
+  password  String
+  createdAt DateTime @default(now())
+}
+
+model Client {
+  id        String    @id @default(cuid())
+  name      String
+  phone     String
+  address   String    @default("")
+  street    String    @default("")
+  number    String    @default("")
+  neighborhood String @default("")
+  state     String    @default("")
+  zipCode   String    @default("")
+  complement String   @default("")
+  city      String    @default("")
+  email     String?
+  createdAt DateTime  @default(now())
+  vehicles  Vehicle[]
+}
+
+model Vehicle {
+  id           String      @id @default(cuid())
+  plate        String      @unique
+  model        String
+  brand        String
+  year         Int
+  clientId     String
+  createdAt    DateTime    @default(now())
+  client       Client      @relation(fields: [clientId], references: [id])
+  workOrders   WorkOrder[]
+}
+
+model WorkOrder {
+  id          String   @id @default(cuid())
+  serviceType String   @default("OUTROS")
+  description String
+  status      String   @default("OPEN")
+  totalCents  Int
+  expectedEnd DateTime?
+  vehicleId   String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  vehicle     Vehicle  @relation(fields: [vehicleId], references: [id])
+}

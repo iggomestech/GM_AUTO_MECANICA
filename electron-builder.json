@@ -1,0 +1,72 @@
+{
+  "appId": "com.gm.sistema",
+  "productName": "GM Sistema",
+  "directories": {
+    "output": "release"
+  },
+  "asar": true,
+  "extraMetadata": {
+    "main": "apps/desktop/main.cjs"
+  },
+  "files": [
+    {
+      "from": ".",
+      "to": ".",
+      "filter": [
+        "package.json"
+      ]
+    },
+    {
+      "from": "apps/desktop",
+      "to": "apps/desktop",
+      "filter": [
+        "main.cjs",
+        "assets/**/*"
+      ]
+    },
+    {
+      "from": "apps/frontend/dist",
+      "to": "frontend/dist",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
+  "extraResources": [
+    {
+      "from": "apps/backend/dist",
+      "to": "backend/dist",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "apps/backend/prisma/dev.db",
+      "to": "backend/dev.db"
+    },
+    {
+      "from": "node_modules",
+      "to": "backend/node_modules",
+      "filter": [
+        "**/*"
+      ]
+    }
+  ],
+  "win": {
+    "signAndEditExecutable": false,
+    "target": [
+      {
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }
+    ]
+  },
+  "nsis": {
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "type": "node-terminal",
+      "name": "Debug Backend (npm workspace)",
+      "request": "launch",
+      "command": "cmd.exe /d /c \"set PATH=C:\\Users\\Matheus\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64;%PATH% && \\\"C:\\Users\\Matheus\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\npm.cmd\\\" run dev:backend\""
+    },
+    {
+      "type": "node-terminal",
+      "name": "Debug Frontend (npm workspace)",
+      "request": "launch",
+      "command": "cmd.exe /d /c \"set PATH=C:\\Users\\Matheus\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64;%PATH% && \\\"C:\\Users\\Matheus\\AppData\\Local\\Microsoft\\WinGet\\Packages\\OpenJS.NodeJS.LTS_Microsoft.Winget.Source_8wekyb3d8bbwe\\node-v24.14.0-win-x64\\npm.cmd\\\" run dev:frontend\""
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Debug Full Stack",
+      "configurations": [
+        "Debug Backend (npm workspace)",
+        "Debug Frontend (npm workspace)"
+      ]
+    }
+  ]
+}

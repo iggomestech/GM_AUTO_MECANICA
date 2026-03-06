@@ -1,0 +1,16 @@
+{
+  "name": "desktop",
+  "version": "0.1.0",
+  "private": true,
+  "main": "main.cjs",
+  "scripts": {
+    "dev": "electron .",
+    "build": "echo Desktop workspace pronto para execucao com Electron",
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^34.3.0",
+    "concurrently": "^9.0.1",
+    "wait-on": "^8.0.1"
+  }
+}
